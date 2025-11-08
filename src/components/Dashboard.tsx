@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
-import { LogOut, Heart, RefreshCw, ClipboardList, Wrench, CheckCircle } from 'lucide-react';
+import { LogOut, Heart, RefreshCw, ClipboardList, Wrench, CheckCircle, Receipt } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ServiceCallCard from './ServiceCallCard';
+import Breadcrumb from './Breadcrumb';
 import type { User } from '@supabase/supabase-js';
 import type { ServiceCall } from '../types';
 
 interface DashboardProps {
   user: User;
+  onNavigateToExpenses: () => void;
 }
 
-export default function Dashboard({ user }: DashboardProps) {
+export default function Dashboard({ user, onNavigateToExpenses }: DashboardProps) {
   const [assignedCalls, setAssignedCalls] = useState<ServiceCall[]>([]);
   const [inProgressCalls, setInProgressCalls] = useState<ServiceCall[]>([]);
   const [closedCalls, setClosedCalls] = useState<ServiceCall[]>([]);
@@ -123,6 +125,13 @@ export default function Dashboard({ user }: DashboardProps) {
             </div>
             <div className="flex items-center gap-3">
               <button
+                onClick={onNavigateToExpenses}
+                className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
+              >
+                <Receipt className="w-4 h-4" />
+                <span className="hidden sm:inline">Expenses</span>
+              </button>
+              <button
                 onClick={handleRefresh}
                 disabled={refreshing}
                 className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors disabled:opacity-50"
@@ -147,7 +156,9 @@ export default function Dashboard({ user }: DashboardProps) {
       </nav>
 
       <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-120px)]">
+        <Breadcrumb items={[{ label: 'Dashboard' }]} />
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-180px)]">
           <div className="lg:col-span-1 flex flex-col">
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
               <div className="flex items-center gap-3">

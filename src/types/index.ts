@@ -28,3 +28,23 @@ export interface ServiceCall {
   updated_at: string;
   customer?: Customer;
 }
+
+export interface ExpenseSubmission {
+  id: string;
+  engineer_id: string;
+  expense_date: string;
+  category: 'travel' | 'meals' | 'materials' | 'fuel' | 'accommodation' | 'other';
+  amount: number;
+  currency: string;
+  description: string;
+  receipt_url: string;
+  service_call_id: string | null;
+  status: 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected' | 'paid';
+  submitted_at: string | null;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+  review_notes: string;
+  payment_date: string | null;
+  created_at: string;
+  updated_at: string;
+}

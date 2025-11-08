@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 import { supabase } from './lib/supabase';
 import LoginScreen from './components/LoginScreen';
 import Dashboard from './components/Dashboard';
+import ExpenseSubmissions from './components/ExpenseSubmissions';
 import type { User } from '@supabase/supabase-js';
+
+type Page = 'dashboard' | 'expenses';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState<Page>('dashboard');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -31,7 +35,25 @@ function App() {
     );
   }
 
-  return user ? <Dashboard user={user} /> : <LoginScreen />;
+  if (!user) {
+    return <LoginScreen />;
+  }
+
+  if (currentPage === 'expenses') {
+    return (
+      <ExpenseSubmissions
+        user={user}
+        onNavigateHome={() => setCurrentPage('dashboard')}
+      />
+    );
+  }
+
+  return (
+    <Dashboard
+      user={user}
+      onNavigateToExpenses={() => setCurrentPage('expenses')}
+    />
+  );
 }
 
 export default App;
